@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Green Tech Conference Color System */
+    --forest-deep: 166 73% 13%;      /* Deep Forest Green #0B3D2E */
+    --green-primary: 162 78% 28%;     /* Primary Green #0E7C56 */
+    --cyan-tech: 195 100% 46%;        /* Tech Cyan #00A8E8 */
+    --mint-surface: 150 62% 94%;      /* Mint/Surface #E6F8EE */
+    --off-white: 0 0% 99%;            /* Off-White #FDFDFD */
+    --gray-neutral: 0 0% 44%;         /* Neutral Gray #707070 */
+    --gold-accent: 41 51% 51%;        /* Accent Gold #CDA434 */
+    
+    /* Semantic Design Tokens */
+    --background: var(--off-white);
+    --foreground: var(--forest-deep);
+    
+    --card: var(--off-white);
+    --card-foreground: var(--forest-deep);
+    
+    --popover: var(--off-white);
+    --popover-foreground: var(--forest-deep);
+    
+    --primary: var(--green-primary);
+    --primary-foreground: var(--off-white);
+    
+    --secondary: var(--mint-surface);
+    --secondary-foreground: var(--forest-deep);
+    
+    --muted: var(--mint-surface);
+    --muted-foreground: var(--gray-neutral);
+    
+    --accent: var(--cyan-tech);
+    --accent-foreground: var(--off-white);
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: var(--off-white);
+    
+    --border: 150 30% 88%;
+    --input: 150 30% 88%;
+    --ring: var(--green-primary);
+    
+    --radius: 1rem;
+    
+    /* Custom Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--forest-deep)) 0%, hsl(var(--green-primary)) 50%, hsl(var(--cyan-tech)) 100%);
+    --gradient-cta: linear-gradient(90deg, hsl(var(--green-primary)) 0%, hsl(var(--cyan-tech)) 100%);
+    --gradient-card: linear-gradient(180deg, hsla(var(--off-white) / 0.95) 0%, hsla(var(--mint-surface) / 0.9) 100%);
+    
+    /* Shadows & Effects */
+    --shadow-elegant: 0 10px 40px -10px hsl(var(--forest-deep) / 0.15);
+    --shadow-glow: 0 0 30px hsl(var(--cyan-tech) / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(var(--forest-deep) / 0.1);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .dark {
+    --background: var(--forest-deep);
+    --foreground: var(--off-white);
+    
+    --card: 166 73% 18%;
+    --card-foreground: var(--off-white);
+    
+    --popover: var(--forest-deep);
+    --popover-foreground: var(--off-white);
+    
+    --primary: var(--cyan-tech);
+    --primary-foreground: var(--forest-deep);
+    
+    --secondary: 162 78% 20%;
+    --secondary-foreground: var(--mint-surface);
+    
+    --muted: 162 40% 25%;
+    --muted-foreground: 150 20% 70%;
+    
+    --accent: var(--cyan-tech);
+    --accent-foreground: var(--forest-deep);
+    
+    --border: 162 40% 20%;
+    --input: 162 40% 20%;
+    --ring: var(--cyan-tech);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "kern" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  /* Background Patterns */
+  .bg-hero-pattern {
+    background: var(--gradient-hero);
+    position: relative;
+  }
+  
+  .bg-hero-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, hsla(var(--cyan-tech) / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, hsla(var(--green-primary) / 0.1) 0%, transparent 50%);
+    animation: pulse-slow 8s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  /* Glass Morphism */
+  .glass-card {
+    background: hsla(var(--off-white) / 0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-card);
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    background: var(--gradient-cta);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Hover Effects */
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Section Dividers */
+  .divider-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  }
+  
+  .divider-wave {
+    position: relative;
+  }
+  
+  .divider-wave::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: hsl(var(--background));
+    clip-path: ellipse(100% 100% at 50% 100%);
+  }
+  
+  /* Focus States */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
