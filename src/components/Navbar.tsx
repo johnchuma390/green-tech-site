@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -31,41 +31,65 @@ const highlightsLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false); // ⬅️ hide/show the whole bar on scroll
   const location = useLocation();
+  const lastY = useRef(0);
 
+  // Close mobile on route change
+  useEffect(() => setIsOpen(false), [location]);
+
+  // Hide on scroll down, show on scroll up (with a small threshold to avoid jitter)
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const THRESHOLD = 8;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+
+      // Always show near top
+      if (y < 10) {
+        setHidden(false);
+      } else {
+        if (delta > THRESHOLD) setHidden(true);      // scrolling down → hide
+        else if (delta < -THRESHOLD) setHidden(false); // scrolling up → show
+      }
+      lastY.current = y;
+    };
+    // initialize lastY to current position
+    lastY.current = window.scrollY;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    setIsOpen(false); // close mobile on route change
-  }, [location]);
-
   const isActive = (href: string) => location.pathname === href;
-  const isAnyActive = (links: { href: string }[]) => links.some(l => isActive(l.href));
+  const isAnyActive = (links: { href: string }[]) => links.some((l) => isActive(l.href));
+
+  const linkBase =
+    'px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring relative';
+  const linkIdle = 'text-foreground hover:bg-secondary';
+  const linkActive = 'bg-primary text-primary-foreground';
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/95 backdrop-blur-md shadow-card' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 will-change-transform transition-transform duration-300 ${
+        hidden ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
     >
-      <div className="container mx-auto px-4">
+      {/* persistent white highlight (stays, no blinking) */}
+      <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-black/5" />
+
+      <div className="container mx-auto px-4 relative">
         <div className="flex items-center justify-between h-16">
           {/* Logos + Wordmark */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="flex items-center gap-2">
-              <div className="rounded bg-white p-1 shadow-sm">
+              <div className="rounded bg-white p-1 shadow-sm ring-1 ring-black/5">
                 <img
                   src={LOGO_ONE_URL}
                   alt="Organizer 1"
                   className="h-7 md:h-8 w-auto object-contain"
                 />
               </div>
-              <div className="rounded bg-white p-1 shadow-sm">
+              <div className="rounded bg-white p-1 shadow-sm ring-1 ring-black/5">
                 <img
                   src={LOGO_TWO_URL}
                   alt="Organizer 2"
@@ -73,7 +97,7 @@ export default function Navbar() {
                 />
               </div>
             </div>
-            <span className="font-heading font-bold text-lg hidden sm:block">
+            <span className="font-heading font-bold text-lg hidden sm:block text-foreground">
               Green Tech 2025
             </span>
           </Link>
@@ -81,13 +105,9 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
             {/* Home */}
-            <Link
-              to="/"
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                isActive('/') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
-              }`}
-            >
+            <Link to="/" className={`${linkBase} ${isActive('/') ? linkActive : linkIdle}`}>
               Home
+              {isActive('/') && <ActiveUnderline />}
             </Link>
 
             {/* About (dropdown) */}
@@ -95,17 +115,16 @@ export default function Navbar() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                      isAnyActive(aboutLinks)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-foreground hover:bg-secondary'
+                    className={`${linkBase} ${
+                      isAnyActive(aboutLinks) ? linkActive : linkIdle
                     }`}
                   >
                     About
+                    {isAnyActive(aboutLinks) && <ActiveUnderline />}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[220px] gap-1 p-2 bg-background border border-border rounded-lg shadow-card">
-                      {aboutLinks.map(link => (
+                      {aboutLinks.map((link) => (
                         <li key={link.name}>
                           <NavigationMenuLink asChild>
                             <Link
@@ -114,7 +133,9 @@ export default function Navbar() {
                                 isActive(link.href) ? 'bg-primary text-primary-foreground' : ''
                               }`}
                             >
-                              <div className="text-sm font-medium leading-none">{link.name}</div>
+                              <div className="text-sm font-medium leading-none">
+                                {link.name}
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                         </li>
@@ -128,11 +149,12 @@ export default function Navbar() {
             {/* Partnerships */}
             <Link
               to="/sponsorship"
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                isActive('/sponsorship') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+              className={`${linkBase} ${
+                isActive('/sponsorship') ? linkActive : linkIdle
               }`}
             >
               Partnerships
+              {isActive('/sponsorship') && <ActiveUnderline />}
             </Link>
 
             {/* Highlights (dropdown) */}
@@ -140,17 +162,16 @@ export default function Navbar() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                      isAnyActive(highlightsLinks)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-foreground hover:bg-secondary'
+                    className={`${linkBase} ${
+                      isAnyActive(highlightsLinks) ? linkActive : linkIdle
                     }`}
                   >
                     Highlights
+                    {isAnyActive(highlightsLinks) && <ActiveUnderline />}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[220px] gap-1 p-2 bg-background border border-border rounded-lg shadow-card">
-                      {highlightsLinks.map(link => (
+                      {highlightsLinks.map((link) => (
                         <li key={link.name}>
                           <NavigationMenuLink asChild>
                             <Link
@@ -159,7 +180,9 @@ export default function Navbar() {
                                 isActive(link.href) ? 'bg-primary text-primary-foreground' : ''
                               }`}
                             >
-                              <div className="text-sm font-medium leading-none">{link.name}</div>
+                              <div className="text-sm font-medium leading-none">
+                                {link.name}
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                         </li>
@@ -173,21 +196,23 @@ export default function Navbar() {
             {/* Register */}
             <Link
               to="/register"
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                isActive('/register') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+              className={`${linkBase} ${
+                isActive('/register') ? linkActive : linkIdle
               }`}
             >
               Register
+              {isActive('/register') && <ActiveUnderline />}
             </Link>
 
             {/* Contact */}
             <Link
               to="/contact"
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                isActive('/contact') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+              className={`${linkBase} ${
+                isActive('/contact') ? linkActive : linkIdle
               }`}
             >
               Contact
+              {isActive('/contact') && <ActiveUnderline />}
             </Link>
           </div>
 
@@ -202,7 +227,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-secondary focus-ring"
+            className="lg:hidden p-2 rounded-lg hover:bg-secondary focus-ring text-foreground"
             aria-label="Toggle menu"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -224,18 +249,10 @@ export default function Navbar() {
               {/* Mobile header logos */}
               <div className="flex items-center gap-2 mb-2">
                 <div className="rounded bg-white p-1 shadow-sm">
-                  <img
-                    src={LOGO_ONE_URL}
-                    alt="Organizer 1"
-                    className="h-8 w-auto object-contain"
-                  />
+                  <img src={LOGO_ONE_URL} alt="Organizer 1" className="h-8 w-auto object-contain" />
                 </div>
                 <div className="rounded bg-white p-1 shadow-sm">
-                  <img
-                    src={LOGO_TWO_URL}
-                    alt="Organizer 2"
-                    className="h-8 w-auto object-contain"
-                  />
+                  <img src={LOGO_TWO_URL} alt="Organizer 2" className="h-8 w-auto object-contain" />
                 </div>
                 <span className="ml-2 font-heading font-semibold">Green Tech 2025</span>
               </div>
@@ -253,16 +270,14 @@ export default function Navbar() {
               {/* About */}
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">About</div>
-                {[
-                  { name: 'About ESA & GreenTech', href: '/about' },
-                  { name: 'Team', href: '/team' },
-                  { name: 'Schedule', href: '/schedule' },
-                ].map(link => (
+                {aboutLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
                     className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors focus-ring ${
-                      isActive(link.href) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+                      isActive(link.href)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-foreground hover:bg-secondary'
                     }`}
                   >
                     {link.name}
@@ -274,7 +289,9 @@ export default function Navbar() {
               <Link
                 to="/sponsorship"
                 className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors focus-ring ${
-                  isActive('/sponsorship') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+                  isActive('/sponsorship')
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-foreground hover:bg-secondary'
                 }`}
               >
                 Partnerships
@@ -283,15 +300,14 @@ export default function Navbar() {
               {/* Highlights */}
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">Highlights</div>
-                {[
-                  { name: 'Gallery', href: '/gallery' },
-                  { name: 'Projects', href: '/projects' },
-                ].map(link => (
+                {highlightsLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.href}
                     className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors focus-ring ${
-                      isActive(link.href) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+                      isActive(link.href)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-foreground hover:bg-secondary'
                     }`}
                   >
                     {link.name}
@@ -327,5 +343,16 @@ export default function Navbar() {
         )}
       </AnimatePresence>
     </nav>
+  );
+}
+
+/** Animated underline for the active item */
+function ActiveUnderline() {
+  return (
+    <motion.span
+      layoutId="nav-underline"
+      className="absolute left-2 right-2 -bottom-[2px] h-[2px] rounded-full bg-emerald-500/70"
+      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+    />
   );
 }
