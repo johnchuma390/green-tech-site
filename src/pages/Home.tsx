@@ -15,7 +15,7 @@ import {
   ChevronRight,
   PlayCircle,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
@@ -83,7 +83,7 @@ export default function Home() {
       image: 'https://i.postimg.cc/T2QDrJSr/DSC-4889.jpg',
     },
     {
-      icon: Globe, // using an existing imported icon
+      icon: Globe,
       title: 'Distribution',
       description:
         'Systemized and Greener Distribution: Use of EVs, real-time tracking & coordination, continuous updates on batch dispersal, public demand & inventory levels, and route optimization.',
@@ -136,9 +136,20 @@ export default function Home() {
     'https://i.postimg.cc/yYysJLbR/IMG-20250220-WA0092.jpg',
   ];
 
+  // For “pop” animation on each tick: use changing keys so numbers re-animate
+  const tickerKeys = useMemo(
+    () => ({
+      days: `d-${timeLeft.days}`,
+      hours: `h-${timeLeft.hours}`,
+      minutes: `m-${timeLeft.minutes}`,
+      seconds: `s-${timeLeft.seconds}`,
+    }),
+    [timeLeft.days, timeLeft.hours, timeLeft.minutes, timeLeft.seconds]
+  );
+
   return (
     <div className="bg-white overflow-hidden">
-      {/* === HERO (same structure, new background from your pool) === */}
+      {/* === HERO === */}
       <section
         className="bg-hero-pattern min-h-[90vh] flex items-center justify-center text-center relative overflow-hidden pt-16"
         style={{
@@ -196,11 +207,11 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               className="text-xl text-white/90 mb-10 max-w-2xl leading-relaxed mx-auto"
             >
-              Sustainable by Design – Reshaping Product Life Cycles with Tech. 
+              Sustainable by Design – Reshaping Product Life Cycles with Tech.
               Join us for two days of innovation, collaboration, and sustainable solutions.
             </motion.p>
 
-            {/* CTAs (unchanged) */}
+            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -235,41 +246,107 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Decorative Elements (unchanged) */}
+        {/* Decorative Elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 right-10 w-96 h-96 bg-cyan-tech/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
           <div className="absolute bottom-20 left-10 w-96 h-96 bg-green-primary/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }} />
         </div>
       </section>
 
-      {/* === COUNTDOWN (unchanged) === */}
-      <section className="py-12 bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-center text-gray-900 mb-2">
-              Event Countdown
+      {/* === COUNTDOWN (SUPER FLASHY + ANIMATED) === */}
+      <section className="relative py-14 bg-gradient-to-b from-white to-emerald-50 overflow-hidden">
+        {/* animated rainbow bar */}
+        <div className="pointer-events-none absolute -top-1 left-0 right-0 h-[3px]">
+          <motion.div
+            className="h-full w-[200%] bg-[linear-gradient(90deg,#10b981,#06b6d4,#22d3ee,#a78bfa,#f59e0b,#ef4444,#10b981)]"
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-6xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-5"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <span className="text-emerald-700 font-semibold">Event Countdown</span>
+            </motion.div>
+
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-10">
+              The future starts in…
             </h2>
-            <p className="text-center text-gray-600 mb-8">The future starts in...</p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {Object.entries(timeLeft).map(([unit, value], i) => (
+
+            {/* BIG animated tiles */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+              {([
+                ['days', timeLeft.days],
+                ['hours', timeLeft.hours],
+                ['minutes', timeLeft.minutes],
+                ['seconds', timeLeft.seconds],
+              ] as [string, number][]).map(([unit, value], idx) => (
                 <motion.div
                   key={unit}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="relative group"
+                  transition={{ delay: idx * 0.08 }}
+                  className="relative"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
-                  <div className="relative bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-lg">
-                    <div className="text-4xl md:text-5xl font-black bg-gradient-to-br from-emerald-500 to-cyan-500 bg-clip-text text-transparent mb-1">
+                  {/* glow behind */}
+                  <motion.div
+                    animate={{ opacity: [0.25, 0.5, 0.25], scale: [1, 1.06, 1] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-cyan-400 to-fuchsia-400 rounded-3xl blur-xl"
+                  />
+                  {/* tile */}
+                  <div className="relative bg-white/80 backdrop-blur-md border border-emerald-200/50 rounded-3xl px-4 py-6 md:px-6 md:py-8 shadow-xl overflow-hidden">
+                    {/* moving stripe highlight */}
+                    <motion.div
+                      className="absolute -top-1 left-0 h-[2px] w-full"
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'linear', delay: idx * 0.2 }}
+                      style={{
+                        background:
+                          'linear-gradient(90deg, transparent, rgba(16,185,129,0.8), transparent)',
+                      }}
+                    />
+                    {/* number with POP each tick */}
+                    <motion.div
+                      key={tickerKeys[unit as keyof typeof tickerKeys]}
+                      initial={{ scale: 0.8, rotateX: 25, opacity: 0 }}
+                      animate={{ scale: 1, rotateX: 0, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                      className="text-5xl md:text-6xl font-black leading-none mb-2"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, #10b981 0%, #06b6d4 30%, #22d3ee 60%, #a78bfa 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }}
+                    >
                       {value.toString().padStart(2, '0')}
-                    </div>
-                    <div className="text-gray-600 uppercase tracking-wider text-xs font-bold">
+                    </motion.div>
+                    <div className="uppercase tracking-widest text-[10px] md:text-xs font-extrabold text-gray-600">
                       {unit}
                     </div>
+
+                    {/* confetti sparkle loop on seconds */}
+                    {unit === 'seconds' && (
+                      <motion.div
+                        key={`spark-${timeLeft.seconds}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0] }}
+                        transition={{ duration: 0.9, ease: 'easeInOut' }}
+                        className="pointer-events-none absolute inset-0"
+                      >
+                        <Sparkles className="absolute top-3 right-3 w-5 h-5 text-amber-400" />
+                        <Sparkles className="absolute bottom-3 left-3 w-5 h-5 text-cyan-400" />
+                      </motion.div>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -277,33 +354,21 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Marquee Stats (unchanged) */}
-        <div className="mt-10 border-t border-b border-gray-200 bg-gray-50">
-          <div className="overflow-hidden whitespace-nowrap py-3">
-            <motion.div
-              animate={{ x: ['0%', '-50%'] }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              className="inline-flex gap-12"
-            >
-              {[...Array(2)].map((_, idx) => (
-                <div key={idx} className="inline-flex gap-12 text-gray-700 text-sm">
-                  <span className="inline-flex items-center gap-2 font-medium">
-                    <Users className="h-4 w-4 text-emerald-500" /> 500+ Attendees
-                  </span>
-                  <span className="inline-flex items-center gap-2 font-medium">
-                    <PlayCircle className="h-4 w-4 text-cyan-500" /> 2 Days • 4 Tracks
-                  </span>
-                  <span className="inline-flex items-center gap-2 font-medium">
-                    <ChevronRight className="h-4 w-4 text-teal-500" /> Demos • Workshops • Awards
-                  </span>
-                  <span className="inline-flex items-center gap-2 font-medium">
-                    <ChevronRight className="h-4 w-4 text-emerald-500" /> Partners & Exhibitions
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
+        {/* soft animated background shapes */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -left-10 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(closest-side, rgba(16,185,129,.3), transparent)' }}
+          animate={{ y: [0, -10, 0], x: [0, 10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -top-16 -right-10 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(closest-side, rgba(6,182,212,.3), transparent)' }}
+          animate={{ y: [0, 12, 0], x: [0, -8, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </section>
 
       {/* === FOCUS AREAS (alternating; updated content only) === */}
@@ -370,7 +435,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === PARTNERS (marquee | unchanged from your last) === */}
+      {/* === PARTNERS (marquee — FASTER) === */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
@@ -403,7 +468,8 @@ export default function Home() {
             <motion.div
               animate={{ x: ['0%', '-50%'] }}
               transition={{
-                duration: isMobile ? 12 : 32,
+                // FASTER speeds
+                duration: isMobile ? 7 : 18,
                 repeat: Infinity,
                 ease: 'linear',
               }}
@@ -477,7 +543,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === FINAL CTA (unchanged) === */}
+      {/* === FINAL CTA === */}
       <section className="py-20 relative overflow-hidden" style={{
         background: 'radial-gradient(1200px 600px at 50% 10%, rgba(34,197,94,.25), transparent 60%), linear-gradient(180deg, rgba(5,150,105,.85), rgba(6,95,70,.90))'
       }}>
