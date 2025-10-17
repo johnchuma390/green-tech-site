@@ -1,5 +1,20 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Calendar, MapPin, Users, Award, Lightbulb, Factory, Recycle, Scale, ArrowRight, Sparkles, Zap, Globe, ChevronRight, PlayCircle } from 'lucide-react';
+import { motion, useScroll } from 'framer-motion';
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Award,
+  Lightbulb,
+  Factory,
+  Recycle,
+  Scale,
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Globe,
+  ChevronRight,
+  PlayCircle,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +38,9 @@ export default function Home() {
       if (distance > 0) {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          hours: Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          ),
           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((distance % (1000 * 60)) / 1000),
         });
@@ -35,77 +52,98 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Richer copy + color + image per focus item (used below)
+  // detect phone to speed up the marquee + tighten strip
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const set = () => setIsMobile(mq.matches);
+    set();
+    if (mq.addEventListener) mq.addEventListener('change', set);
+    else mq.addListener(set);
+    return () =>
+      mq.removeEventListener ? mq.removeEventListener('change', set) : mq.removeListener(set);
+  }, []);
+
+  // >>> UPDATED FOCUS AREAS (5 items) + images from your pool <<<
   const highlights = [
     {
       icon: Lightbulb,
       title: 'Ideation',
       description:
-        'From problem framing to concept validation: design sprints, LCA-informed brainstorming, rapid prototyping workflows, and AI-assisted R&D that reduce material use and energy intensity from day zero.',
+        'Making Data Driven Decisions: Eco-friendly material selection, pre-production environmental impact prediction, and development of efficient product life-cycle blueprints.',
       color: 'from-amber-500 via-orange-500 to-rose-500',
-      image: 'https://i.postimg.cc/X7BL00GC/DSC-28401303.jpg',
+      image: 'https://i.postimg.cc/g0MDtbtQ/DSC-4680.jpg',
     },
     {
       icon: Factory,
       title: 'Manufacturing',
       description:
-        'Cleaner production at scale: green energy integration, process electrification, digital twins for yield optimization, and supplier ESG pipelines that turn factories into low-emission, closed-loop systems.',
+        'Cleaner and Leaner Production: Adopting renewable energy alternatives, deeper integration of renewables into main grids, and proper water and raw-material management.',
       color: 'from-blue-500 via-cyan-500 to-teal-400',
-      image: 'https://i.postimg.cc/HsGqqJtP/Tech-Week-455.jpg',
+      image: 'https://i.postimg.cc/T2QDrJSr/DSC-4889.jpg',
+    },
+    {
+      icon: Globe, // using an existing imported icon
+      title: 'Distribution',
+      description:
+        'Systemized and Greener Distribution: Use of EVs, real-time tracking & coordination, continuous updates on batch dispersal, public demand & inventory levels, and route optimization.',
+      color: 'from-sky-500 via-teal-500 to-emerald-400',
+      image: 'https://i.postimg.cc/rpwffVc6/image.png',
     },
     {
       icon: Scale,
-      title: 'Ethics & Policy',
+      title: 'Ethics and Policy',
       description:
-        'Building for trust and compliance: responsible AI, data governance, lifecycle risk assessment, eco-labels and standards, and policy toolkits to align innovation with human and planetary well-being.',
+        'Responsible advancement: Curbing massive energy consumption in data centres, avoiding data misuse while leveraging green solutions, and addressing unchecked mining practices for EV battery materials.',
       color: 'from-fuchsia-500 via-purple-500 to-pink-500',
-      image: 'https://i.postimg.cc/G2w7yyJz/DSC-4843.jpg',
+      image: 'https://i.postimg.cc/kMxBcFpk/DSC-4716.jpg',
     },
     {
       icon: Recycle,
-      title: 'Circular Design',
+      title: 'Public Consumption & Waste',
       description:
-        'Design for longevity and recovery: modular hardware, repairability by default, materials passports, reverse logistics, and end-of-life strategies that turn waste streams into new value chains.',
+        'Designing lasting products: Tackling planned obsolescence and product hoarding, integrating used products back into the life cycle, and advocating for decomposable materials.',
       color: 'from-emerald-500 via-teal-500 to-green-400',
-      image: 'https://i.postimg.cc/0yDCKjgt/DSC-63431980.jpg',
+      image: 'https://i.postimg.cc/cLqmgcPJ/image.png',
     },
   ];
 
   const partnerLogos = [
-    "https://i.postimg.cc/y8xpcnmY/image.png",
-    "https://i.postimg.cc/pTsnfQYx/image.png",
-    "https://i.postimg.cc/ht0x4qzq/image.png",
-    "https://i.postimg.cc/jj5WsnYW/image.png",
-    "https://i.postimg.cc/j2Qq6RrR/image.png",
-    "https://i.postimg.cc/52GJCXFz/image.png",
-    "https://i.postimg.cc/ZR4MBmjx/image.png",
-    "https://i.postimg.cc/L5qBh0dW/image.png",
-    "https://i.postimg.cc/dDPd3smb/image.png",
-    "https://i.postimg.cc/5t6wsRyW/image.png",
-    "https://i.postimg.cc/wTrxhfCy/image.png",
-    "https://i.postimg.cc/BbdyvKzM/image.png",
-    "https://i.postimg.cc/447XXb7X/image.png",
-    "https://i.postimg.cc/2ypMkWM6/image.png",
-    "https://i.postimg.cc/gkmtgGWd/image.png",
+    'https://i.postimg.cc/y8xpcnmY/image.png',
+    'https://i.postimg.cc/pTsnfQYx/image.png',
+    'https://i.postimg.cc/ht0x4qzq/image.png',
+    'https://i.postimg.cc/jj5WsnYW/image.png',
+    'https://i.postimg.cc/j2Qq6RrR/image.png',
+    'https://i.postimg.cc/52GJCXFz/image.png',
+    'https://i.postimg.cc/ZR4MBmjx/image.png',
+    'https://i.postimg.cc/L5qBh0dW/image.png',
+    'https://i.postimg.cc/dDPd3smb/image.png',
+    'https://i.postimg.cc/5t6wsRyW/image.png',
+    'https://i.postimg.cc/wTrxhfCy/image.png',
+    'https://i.postimg.cc/BbdyvKzM/image.png',
+    'https://i.postimg.cc/447XXb7X/image.png',
+    'https://i.postimg.cc/2ypMkWM6/image.png',
+    'https://i.postimg.cc/gkmtgGWd/image.png',
   ];
 
+  // >>> UPDATED HIGHLIGHTS STRIP IMAGES (6 picks from your pool) <<<
   const galleryImages = [
-    'https://i.postimg.cc/XYF4SwJ2/DSC-31091348.jpg',
-    'https://i.postimg.cc/7ZSZv87W/IMG-2208-1.jpg',
-    'https://i.postimg.cc/hGfgSk7q/IMG-2132.jpg',
-    'https://i.postimg.cc/L8HK7Gcm/DSC-39041938.jpg',
-    'https://i.postimg.cc/3RDxRPr6/DSC-63951987.jpg',
-    'https://i.postimg.cc/BQZp7w29/DSC-23781166.jpg',
+    'https://i.postimg.cc/15HyjWPN/DSC-4687.jpg',
+    'https://i.postimg.cc/B6shkCJQ/DSC-4690.jpg',
+    'https://i.postimg.cc/wBkP6rfB/DSC-4789.jpg',
+    'https://i.postimg.cc/T2QDrJSr/DSC-4889.jpg',
+    'https://i.postimg.cc/kMxBcFpk/DSC-4716.jpg',
+    'https://i.postimg.cc/yYysJLbR/IMG-20250220-WA0092.jpg',
   ];
 
   return (
     <div className="bg-white overflow-hidden">
-      {/* === HERO (reverted to your original) === */}
+      {/* === HERO (same structure, new background from your pool) === */}
       <section
         className="bg-hero-pattern min-h-[90vh] flex items-center justify-center text-center relative overflow-hidden pt-16"
         style={{
           backgroundImage:
-            "url('https://i.postimg.cc/Xv18fDSM/DSC-37771888.jpg')",
+            "url('https://i.postimg.cc/FsPp7t3D/IMG-20250220-WA0081.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -162,7 +200,7 @@ export default function Home() {
               Join us for two days of innovation, collaboration, and sustainable solutions.
             </motion.p>
 
-            {/* CTAs (as you had them) */}
+            {/* CTAs (unchanged) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -197,14 +235,14 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Decorative Elements (as in your original) */}
+        {/* Decorative Elements (unchanged) */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 right-10 w-96 h-96 bg-cyan-tech/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
           <div className="absolute bottom-20 left-10 w-96 h-96 bg-green-primary/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }} />
         </div>
       </section>
 
-      {/* === COUNTDOWN (kept enhanced) === */}
+      {/* === COUNTDOWN (unchanged) === */}
       <section className="py-12 bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
@@ -239,7 +277,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Marquee Stats */}
+        {/* Marquee Stats (unchanged) */}
         <div className="mt-10 border-t border-b border-gray-200 bg-gray-50">
           <div className="overflow-hidden whitespace-nowrap py-3">
             <motion.div
@@ -268,7 +306,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === FOCUS AREAS (alternating image/content; kept enhanced) === */}
+      {/* === FOCUS AREAS (alternating; updated content only) === */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.div
@@ -285,7 +323,7 @@ export default function Home() {
               Full Lifecycle <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">Sustainability</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              From ideation to disposal - explore every stage of sustainable technology development
+              From ideation to disposal - explore every stage of sustainable development through tech.
             </p>
           </motion.div>
 
@@ -332,7 +370,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === PARTNERS (marquee) === */}
+      {/* === PARTNERS (marquee | unchanged from your last) === */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
@@ -343,35 +381,45 @@ export default function Home() {
           >
             <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-6 py-2 mb-4">
               <Globe className="w-4 h-4 text-cyan-500" />
-              <span className="text-cyan-600 font-bold text-sm uppercase tracking-wider">Trusted By Leaders</span>
+              <span className="text-cyan-600 font-bold text-sm uppercase tracking-wider">
+                Trusted By Leaders
+              </span>
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-3">
-              Our <span className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">Partners</span>
+              Our{' '}
+              <span className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+                Partners
+              </span>
             </h2>
             <p className="text-lg text-gray-600">
               Backed by leading organizations championing sustainable technology
             </p>
           </motion.div>
 
-          {/* Scrolling Marquee */}
-          <div className="relative overflow-hidden py-6">
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
+          <div className="relative overflow-hidden py-3 sm:py-4 md:py-6">
+            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 md:w-24 bg-gradient-to-l from-white to-transparent z-10" />
             
             <motion.div
               animate={{ x: ['0%', '-50%'] }}
-              transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-              className="flex gap-8 items-center"
+              transition={{
+                duration: isMobile ? 12 : 32,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+              className="flex items-center gap-4 sm:gap-6 md:gap-8"
+              style={{ willChange: 'transform' }}
             >
               {[...partnerLogos, ...partnerLogos].map((logo, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-white rounded-xl p-4 border border-gray-200 shadow-md hover:shadow-lg transition-shadow w-40 h-28 flex items-center justify-center"
+                  className="flex-shrink-0 bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 border border-gray-200 shadow-sm sm:shadow w-28 h-16 sm:w-36 sm:h-20 md:w-40 md:h-24 lg:h-28 flex items-center justify-center"
                 >
                   <img
                     src={logo}
                     alt={`Partner ${index + 1}`}
-                    className="w-full h-full object-contain grayscale hover:grayscale-0 transition-all"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -380,7 +428,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === HIGHLIGHTS STRIP (links to gallery) === */}
+      {/* === HIGHLIGHTS STRIP (links to gallery | updated images) === */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
@@ -457,7 +505,7 @@ export default function Home() {
             </h2>
             
             <p className="text-xl text-white/90 mb-8 leading-relaxed">
-              Join 500+ innovators, engineers, and sustainability experts at Africa's premier green technology conference
+              Join 500+ innovators, engineers, and sustainability experts at Africa&apos;s premier green technology conference
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">

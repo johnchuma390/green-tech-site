@@ -12,8 +12,8 @@ export default function Contact() {
       <PageHero
         title="Contact Us"
         subtitle="Get in touch with our team for any questions or inquiries"
-        bgImage="https://i.postimg.cc/Hnx8BSTk/DSC-62841955.jpg"
-        bgImageMobile="https://i.postimg.cc/Hnx8BSTk/DSC-62841955.jpg"
+        bgImage="https://i.postimg.cc/Wb4tpx2D/image.png"
+        bgImageMobile="https://i.postimg.cc/Wb4tpx2D/image.png"
         overlayClasses="bg-gradient-to-b from-green-900/75 via-emerald-900/65 to-green-900/85 mix-blend-multiply"
         className="min-h-[60vh]"
         bgPosition="center"

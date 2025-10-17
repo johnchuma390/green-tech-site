@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Leaf, Target, Users, Lightbulb, Globe, Award } from 'lucide-react';
+import { Leaf, Target, Users, Lightbulb, Globe } from 'lucide-react';
 import PageHero from '../components/PageHero';
 import CTAButton from '../components/CTAButton';
 
@@ -17,32 +17,36 @@ export default function About() {
     {
       icon: Target,
       title: 'Our Mission',
-      description: 'To foster innovation in sustainable technology by bringing together students, researchers, industry leaders, and policymakers to explore green solutions across the entire product lifecycle.',
+      description:
+        'To foster innovation in sustainable technology by bringing together students, researchers, industry leaders, and policymakers to explore green solutions across the entire product lifecycle.',
     },
     {
       icon: Lightbulb,
       title: 'Innovation Focus',
-      description: 'We emphasize practical, scalable solutions that address real-world sustainability challenges in ideation, manufacturing, distribution, ethics, and circular economy.',
+      description:
+        'We emphasize practical, scalable solutions that address real-world sustainability challenges in ideation, manufacturing, distribution, ethics, and circular economy.',
     },
     {
       icon: Users,
       title: 'Community Driven',
-      description: 'Building a network of passionate individuals committed to creating a sustainable future through technology, collaboration, and knowledge sharing.',
+      description:
+        'Building a network of passionate individuals committed to creating a sustainable future through technology, collaboration, and knowledge sharing.',
     },
   ];
 
   return (
     <div className="pt-16">
+      {/* HERO (new image from your pool) */}
       <PageHero
         title="About the Conference"
         subtitle="Sustainable by Design – Reshaping Product Life Cycles with Tech"
-        bgImage="https://i.postimg.cc/G2w7yyJz/DSC-4843.jpg"
-        bgImageMobile="https://i.postimg.cc/G2w7yyJz/DSC-4843.jpg"
-        overlayClasses="bg-gradient-to-b from-green-900/75 via-emerald-900/65 to-green-900/85 mix-blend-multiply"
+        bgImage="https://i.postimg.cc/B6shkCJQ/DSC-4690.jpg"
+        bgImageMobile="https://i.postimg.cc/B6shkCJQ/DSC-4690.jpg"
+        overlayClasses="bg-gradient-to-b from-emerald-900/75 via-green-900/65 to-emerald-900/85 mix-blend-multiply"
       />
 
       {/* About ESA */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-background overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -51,13 +55,14 @@ export default function About() {
               viewport={{ once: true }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="bg-gradient-cta p-3 rounded-xl">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 shadow-lg">
                   <Leaf className="h-8 w-8 text-white" />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-heading font-bold">
                   About ESA
                 </h2>
               </div>
+
               <div className="space-y-4 text-muted-foreground">
                 <p>
                   The Engineering Students' Association (ESA) is a professional body within the Faculty of Engineering, University of Nairobi. We unite students from five departments: Civil & Construction Engineering, Electrical & Electronic Engineering, Geospatial & Space Engineering, Mechanical & Manufacturing Engineering, and Environmental & Biosystems Engineering.
@@ -75,26 +80,57 @@ export default function About() {
               </div>
             </motion.div>
 
+            {/* Animated visual column with layered color and float */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="relative"
             >
-              <img
-                src="https://i.postimg.cc/029nvZjt/DSC-4908.jpg"
-                alt="Engineering students collaborating"
-                className="rounded-2xl shadow-elegant w-full"
-                loading="lazy"
+              {/* soft orbs */}
+              <motion.div
+                aria-hidden
+                animate={{ scale: [1, 1.1, 1], opacity: [0.25, 0.4, 0.25] }}
+                transition={{ duration: 8, repeat: Infinity }}
+                className="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-emerald-400/30 blur-2xl"
               />
+              <motion.div
+                aria-hidden
+                animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.25, 0.4] }}
+                transition={{ duration: 10, repeat: Infinity }}
+                className="absolute -bottom-8 -right-8 w-44 h-44 rounded-full bg-cyan-400/30 blur-2xl"
+              />
+
+              <motion.div
+                whileHover={{ scale: 1.02, rotate: 0.2 }}
+                className="relative overflow-hidden rounded-2xl shadow-elegant border border-gray-200 bg-white"
+              >
+                <img
+                  src="https://i.postimg.cc/158YQ5Nh/image.png"
+                  alt="Engineering students collaborating"
+                  className="w-full h-[380px] object-cover"
+                  loading="lazy"
+                />
+                {/* gradient bar */}
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent" />
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Our Values */}
-      <section className="py-20 bg-secondary">
-        <div className="container mx-auto px-4">
+      {/* Our Values — brighter cards with subtle rise animation */}
+      <section className="py-20 bg-secondary relative overflow-hidden">
+        {/* background accent grid */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M0 39.5 H40 M39.5 0 V40\" stroke=\"white\" stroke-width=\"1\"/%3E%3C/svg%3E')",
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -113,87 +149,132 @@ export default function About() {
             {values.map((value, index) => (
               <motion.div
                 key={value.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30, rotate: -0.2 }}
+                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="glass-card rounded-2xl p-8 hover-lift text-center"
+                transition={{ delay: index * 0.08 }}
+                whileHover={{ y: -6 }}
+                className="relative rounded-2xl p-8 text-center bg-white border border-gray-200 shadow-lg"
               >
-                <div className="bg-gradient-cta w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="h-8 w-8 text-white" />
+                <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 opacity-20 blur-xl" />
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-xl grid place-items-center mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-teal-500 shadow-md">
+                    <value.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-3">{value.title}</h3>
+                  <p className="text-muted-foreground">{value.description}</p>
                 </div>
-                <h3 className="font-heading font-bold text-xl mb-3">{value.title}</h3>
-                <p className="text-muted-foreground">{value.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Theme Overview */}
+      {/* Theme Overview + visualization (third image) */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <Globe className="h-8 w-8 text-primary" />
-              <h2 className="text-3xl md:text-4xl font-heading font-bold">
-                Conference Theme
-              </h2>
-            </div>
-
-            <div className="space-y-6 text-muted-foreground">
-              <p className="text-lg">
-                <strong className="text-foreground">"Sustainable by Design – Reshaping Product Life Cycles with Tech"</strong> is more than just a theme—it's a call to action. The Green Tech Conference is a pioneering platform where innovation meets sustainability, exploring how technology can accelerate green ambitions while addressing environmental risks from rapid technological advancement.
-              </p>
-              
-              <p>
-                This event adopts a product lifecycle approach to sustainability—from ideation to waste—covering data-driven design for eco-friendly materials, cleaner manufacturing using renewable energy, sustainable distribution through low-emission logistics, ethical technology development, and circular economies where products are built to last.
-              </p>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-secondary rounded-xl p-6">
-                  <h3 className="font-subheading font-semibold text-foreground mb-3">Day 1: Ideation, Manufacturing & Distribution</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Data-driven design and AI blueprint optimization</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Renewable energy integration in manufacturing</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Clean transport and IoT logistics</span>
-                    </li>
-                  </ul>
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500 via-sky-500 to-blue-500 shadow-lg">
+                  <Globe className="h-8 w-8 text-white" />
                 </div>
+                <h2 className="text-3xl md:text-4xl font-heading font-bold">
+                  Conference Theme
+                </h2>
+              </div>
 
-                <div className="bg-secondary rounded-xl p-6">
-                  <h3 className="font-subheading font-semibold text-foreground mb-3">Day 2: Ethics, Policy & Waste Management</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Data misuse and energy consumption challenges</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Mineral extraction and environmental impact</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Circular economy workshops and awards</span>
-                    </li>
-                  </ul>
+              <div className="space-y-6 text-muted-foreground">
+                <p className="text-lg">
+                  <strong className="text-foreground">
+                    "Sustainable by Design – Reshaping Product Life Cycles with Tech"
+                  </strong>{' '}
+                  is more than just a theme—it's a call to action. The Green Tech Conference is a
+                  pioneering platform where innovation meets sustainability, exploring how technology can
+                  accelerate green ambitions while addressing environmental risks from rapid technological advancement.
+                </p>
+
+                <p>
+                  We take a full lifecycle view—from ideation to waste—covering data-driven design for
+                  eco-friendly materials, cleaner manufacturing via renewables, greener distribution,
+                  ethics & policy for responsible tech, and circularity so products are built to last.
+                </p>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="rounded-xl p-6 bg-secondary/80 border border-secondary/60">
+                    <h3 className="font-subheading font-semibold text-foreground mb-3">
+                      Day 1: Ideation, Manufacturing & Distribution
+                    </h3>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-emerald-600 mt-1">•</span>
+                        <span>Data-driven design and AI blueprint optimization</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-emerald-600 mt-1">•</span>
+                        <span>Renewable energy integration in manufacturing</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-emerald-600 mt-1">•</span>
+                        <span>Clean transport and IoT logistics</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl p-6 bg-secondary/80 border border-secondary/60">
+                    <h3 className="font-subheading font-semibold text-foreground mb-3">
+                      Day 2: Ethics, Policy & Waste Management
+                    </h3>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-600 mt-1">•</span>
+                        <span>Data misuse and energy consumption challenges</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-600 mt-1">•</span>
+                        <span>Mineral extraction and environmental impact</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-cyan-600 mt-1">•</span>
+                        <span>Circular economy workshops and awards</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Right-side animated visualization image (from pool) */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <motion.div
+                aria-hidden
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 6, repeat: Infinity }}
+                className="absolute -top-8 -right-6 w-28 h-28 rounded-3xl bg-gradient-to-br from-emerald-400/30 to-cyan-400/30 blur-xl"
+              />
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="relative overflow-hidden rounded-2xl shadow-elegant border border-gray-200 bg-white"
+              >
+                <img
+                  src="https://i.postimg.cc/gJzvWSQs/DSC-4685.jpg"
+                  alt="Conference visualization"
+                  className="w-full h-[420px] object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -217,13 +298,14 @@ export default function About() {
               {sdgs.map((sdg, index) => (
                 <motion.div
                   key={sdg.number}
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="glass-card rounded-xl p-6 hover-lift text-center min-w-[150px]"
+                  whileHover={{ y: -4 }}
+                  className="rounded-xl p-6 text-center min-w-[150px] bg-white border border-gray-200 shadow-md"
                 >
-                  <div className="text-4xl font-heading font-bold gradient-text mb-2">
+                  <div className="text-4xl font-heading font-bold bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent mb-2">
                     {sdg.number}
                   </div>
                   <p className="text-sm text-muted-foreground">{sdg.name}</p>
@@ -235,8 +317,22 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-hero-pattern">
-        <div className="container mx-auto px-4 text-center">
+      <section
+        className="py-20 relative overflow-hidden"
+        style={{
+          background:
+            'radial-gradient(1000px 500px at 20% 10%, rgba(16,185,129,.25), transparent 60%), radial-gradient(800px 500px at 80% 20%, rgba(6,182,212,.22), transparent 60%), linear-gradient(180deg, rgba(6,95,70,.92), rgba(6,78,59,.95))',
+        }}
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M0 39.5 H40 M39.5 0 V40\" stroke=\"white\" stroke-width=\"1\"/%3E%3C/svg%3E')",
+          }}
+        />
+        <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -246,7 +342,7 @@ export default function About() {
               Be Part of the Change
             </h2>
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Join us in exploring sustainable solutions for tomorrow's challenges
+              Join us in exploring sustainable solutions for tomorrow&apos;s challenges
             </p>
             <CTAButton
               href="https://docs.google.com/forms/d/e/1FAIpQLSey4R9Nqru7kAxdWvRaWRuE42I-b4i4LxmKq4hHVgWGlAQdcw/viewform?usp=header"
@@ -257,6 +353,20 @@ export default function About() {
             </CTAButton>
           </motion.div>
         </div>
+
+        {/* floating orbs */}
+        <motion.div
+          aria-hidden
+          animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.4, 0.25] }}
+          transition={{ duration: 9, repeat: Infinity }}
+          className="absolute top-24 left-8 w-72 h-72 bg-emerald-400/30 rounded-full blur-3xl"
+        />
+        <motion.div
+          aria-hidden
+          animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.25, 0.4] }}
+          transition={{ duration: 11, repeat: Infinity }}
+          className="absolute bottom-24 right-8 w-72 h-72 bg-cyan-400/30 rounded-full blur-3xl"
+        />
       </section>
     </div>
   );

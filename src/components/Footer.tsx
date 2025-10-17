@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Leaf, Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+
+/** Organizer logos (provided) */
+const LOGO_ONE_URL =
+  'https://i.postimg.cc/5y00p9S8/Whats-App-Image-2025-10-17-at-11-07-32-1051034d.jpg';
+const LOGO_TWO_URL =
+  'https://i.postimg.cc/hj4PP46Q/Whats-App-Image-2025-10-17-at-11-07-33-f5204afa.jpg';
 
 const navigation = {
   main: [
@@ -28,16 +34,31 @@ export default function Footer() {
     <footer className="bg-forest-deep text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
+          {/* Brand / Organized by */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="bg-gradient-cta p-2 rounded-lg">
-                <Leaf className="h-6 w-6 text-white" />
+            <div className="flex items-center gap-3">
+              {/* Two organizer logos side-by-side (proportional, visible on dark) */}
+              <div className="flex items-center gap-2">
+                <div className="rounded bg-white p-1 shadow-sm">
+                  <img
+                    src={LOGO_ONE_URL}
+                    alt="Organizer 1"
+                    className="h-10 md:h-12 w-auto object-contain"
+                  />
+                </div>
+                <div className="rounded bg-white p-1 shadow-sm">
+                  <img
+                    src={LOGO_TWO_URL}
+                    alt="Organizer 2"
+                    className="h-10 md:h-12 w-auto object-contain"
+                  />
+                </div>
               </div>
               <span className="font-heading font-bold text-lg">Green Tech 2025</span>
             </div>
+
             <p className="text-white/80 text-sm">
-              Organized by Engineering Students' Association, University of Nairobi. Sustainable by Design – Reshaping Product Life Cycles with Tech.
+              Organized by committees of the two bodies shown above. Sustainable by Design – Reshaping Product Life Cycles with Tech.
             </p>
           </div>
 

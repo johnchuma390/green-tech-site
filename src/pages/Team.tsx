@@ -10,8 +10,8 @@ export default function Team() {
       <PageHero
         title="Our Team"
         subtitle="Meet the passionate individuals organizing Green Tech Conference 2025"
-        bgImage="https://i.postimg.cc/qv9V1gxT/Tech-Week-45.jpg"
-        bgImageMobile="https://i.postimg.cc/qv9V1gxT/Tech-Week-45.jpg"
+        bgImage="https://i.postimg.cc/XYMWDTBD/image.png"
+        bgImageMobile="https://i.postimg.cc/XYMWDTBD/image.png"
         overlayClasses="bg-gradient-to-b from-green-900/75 via-emerald-900/65 to-green-900/85 mix-blend-multiply"
         className="min-h-[60vh]"
         bgPosition="center"

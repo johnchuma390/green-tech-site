@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Leaf } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import {
@@ -11,6 +11,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from './ui/navigation-menu';
+
+/** Organizer logos (provided) */
+const LOGO_ONE_URL =
+  'https://i.postimg.cc/5y00p9S8/Whats-App-Image-2025-10-17-at-11-07-32-1051034d.jpg';
+const LOGO_TWO_URL =
+  'https://i.postimg.cc/hj4PP46Q/Whats-App-Image-2025-10-17-at-11-07-33-f5204afa.jpg';
 
 const aboutLinks = [
   { name: 'About ESA & GreenTech', href: '/about' },
@@ -49,10 +55,23 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-cta p-2 rounded-lg transition-transform group-hover:scale-110">
-              <Leaf className="h-6 w-6 text-white" />
+          {/* Logos + Wordmark */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="flex items-center gap-2">
+              <div className="rounded bg-white p-1 shadow-sm">
+                <img
+                  src={LOGO_ONE_URL}
+                  alt="Organizer 1"
+                  className="h-7 md:h-8 w-auto object-contain"
+                />
+              </div>
+              <div className="rounded bg-white p-1 shadow-sm">
+                <img
+                  src={LOGO_TWO_URL}
+                  alt="Organizer 2"
+                  className="h-7 md:h-8 w-auto object-contain"
+                />
+              </div>
             </div>
             <span className="font-heading font-bold text-lg hidden sm:block">
               Green Tech 2025
@@ -77,7 +96,9 @@ export default function Navbar() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                      isAnyActive(aboutLinks) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
+                      isAnyActive(aboutLinks)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-foreground hover:bg-secondary'
                     }`}
                   >
                     About
@@ -104,7 +125,7 @@ export default function Navbar() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            {/* Partnerships (single link to /sponsorship) */}
+            {/* Partnerships */}
             <Link
               to="/sponsorship"
               className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
@@ -118,31 +139,33 @@ export default function Navbar() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
-                        isAnyActive(highlightsLinks) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'
-                      }`}
-                    >
-                      Highlights
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[220px] gap-1 p-2 bg-background border border-border rounded-lg shadow-card">
-                        {highlightsLinks.map(link => (
-                          <li key={link.name}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                to={link.href}
-                                className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-secondary focus:bg-secondary ${
-                                  isActive(link.href) ? 'bg-primary text-primary-foreground' : ''
-                                }`}
-                              >
-                                <div className="text-sm font-medium leading-none">{link.name}</div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
+                  <NavigationMenuTrigger
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring ${
+                      isAnyActive(highlightsLinks)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-foreground hover:bg-secondary'
+                    }`}
+                  >
+                    Highlights
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[220px] gap-1 p-2 bg-background border border-border rounded-lg shadow-card">
+                      {highlightsLinks.map(link => (
+                        <li key={link.name}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to={link.href}
+                              className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-secondary focus:bg-secondary ${
+                                isActive(link.href) ? 'bg-primary text-primary-foreground' : ''
+                              }`}
+                            >
+                              <div className="text-sm font-medium leading-none">{link.name}</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -198,6 +221,25 @@ export default function Navbar() {
             className="lg:hidden border-t border-border bg-background/95 backdrop-blur-md"
           >
             <div className="container mx-auto px-4 py-4 space-y-2">
+              {/* Mobile header logos */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded bg-white p-1 shadow-sm">
+                  <img
+                    src={LOGO_ONE_URL}
+                    alt="Organizer 1"
+                    className="h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="rounded bg-white p-1 shadow-sm">
+                  <img
+                    src={LOGO_TWO_URL}
+                    alt="Organizer 2"
+                    className="h-8 w-auto object-contain"
+                  />
+                </div>
+                <span className="ml-2 font-heading font-semibold">Green Tech 2025</span>
+              </div>
+
               {/* Home */}
               <Link
                 to="/"
@@ -211,7 +253,11 @@ export default function Navbar() {
               {/* About */}
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">About</div>
-                {aboutLinks.map(link => (
+                {[
+                  { name: 'About ESA & GreenTech', href: '/about' },
+                  { name: 'Team', href: '/team' },
+                  { name: 'Schedule', href: '/schedule' },
+                ].map(link => (
                   <Link
                     key={link.name}
                     to={link.href}
@@ -237,7 +283,10 @@ export default function Navbar() {
               {/* Highlights */}
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-semibold text-muted-foreground">Highlights</div>
-                {highlightsLinks.map(link => (
+                {[
+                  { name: 'Gallery', href: '/gallery' },
+                  { name: 'Projects', href: '/projects' },
+                ].map(link => (
                   <Link
                     key={link.name}
                     to={link.href}

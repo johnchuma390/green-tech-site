@@ -77,8 +77,8 @@ export default function Privacy() {
               <p className="text-muted-foreground">
                 If you have any questions about this Privacy Policy or how we handle your information, 
                 please contact us at{' '}
-                <a href="mailto:privacy@greentechconf.org" className="text-primary hover:underline">
-                  privacy@greentechconf.org
+                <a href="mailto:esatechsummit@students.uonbi.ac.ke" className="text-primary hover:underline">
+                  esatechsummit@students.uonbi.ac.ke
                 </a>
               </p>
             </div>
